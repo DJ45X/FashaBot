@@ -2,6 +2,7 @@ package services.dj45x.configs;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -36,6 +37,8 @@ public class JDAConfig {
         for(var adapter : listenerAdapters){
             jda.addEventListener(adapter);
         }
+
+        jda.getPresence().setActivity(Activity.customStatus("DM me pics!"));
 
         return jda;
     }
