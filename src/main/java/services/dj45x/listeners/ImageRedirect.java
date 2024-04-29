@@ -1,6 +1,8 @@
 package services.dj45x.listeners;
 
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -14,26 +16,45 @@ import services.dj45x.utils.Logging;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Component
 public class ImageRedirect extends ListenerAdapter {
-    private final String guildId;
+    private final String lairId;
+    private final String dungeonId;
     private final String imageChannelName;
     @Autowired
     public ImageRedirect(
-            @Value("${discord.guildId}") String GUILDID,
+            @Value("${discord.guildId.lair}") String LAIRID,
+            @Value("${discord.guildId.dungeon}") String DUNGEONID,
             @Value("${discord.channels.imageChannel}") String IMAGECHANNEL
     ) {
-        this.guildId = GUILDID;
+        this.lairId = LAIRID;
+        this.dungeonId = DUNGEONID;
         this.imageChannelName = IMAGECHANNEL;
     }
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         super.onMessageReceived(event);
-        Guild guild = event.getJDA().getGuildById(guildId);
-        assert guild != null;
-        TextChannel channel = JDAUtils.getTextChannelByName(guild, imageChannelName);
+        Guild lairGuild = event.getJDA().getGuildById(lairId);
+        Guild dungeonGuild = event.getJDA().getGuildById(dungeonId);
+
+        if(lairGuild == null || dungeonGuild == null){
+            Logging.warn("Guild not found!");
+            return;
+        }
+
+        TextChannel dungeonChannel = JDAUtils.getTextChannelByName(dungeonGuild, imageChannelName);
+        TextChannel lairChannel = JDAUtils.getTextChannelByName(lairGuild, imageChannelName);
+
+        if(dungeonChannel == null || lairChannel == null){
+            Logging.warn("Image channel not found!");
+            event.getAuthor().openPrivateChannel()
+                    .flatMap(privateChannel -> privateChannel.sendMessage("Image channel not found! Please contact an admin."))
+                    .queue();
+            return;
+        }
 
         User bot = event.getAuthor();
         if(bot.isBot()) return;
@@ -53,20 +74,18 @@ public class ImageRedirect extends ListenerAdapter {
                 return;
             }
 
-            if(channel == null){
-                Logging.warn("Image channel not found!");
-                event.getAuthor().openPrivateChannel()
-                        .flatMap(privateChannel -> privateChannel.sendMessage("Image channel not found! Please contact an admin."))
-                        .queue();
-                return;
-            }
-
-            channel.sendMessage("Images from: " + author.getAsMention()).queue();
-
-            for(Message.Attachment attachment : attachmentsList){
-                String url = attachment.getUrl();
-
-                channel.sendMessage(url).queue();
+            if(attachmentsList.size() > 1){
+                String joinedUrls = attachmentsList.stream()
+                        .map(Message.Attachment::getUrl)
+                        .collect(Collectors.joining("\n"));
+                lairChannel.sendMessage("## Images sent from:\n" + author.getAsMention() + "\n\n" + joinedUrls).queue();
+                dungeonChannel.sendMessage("## Images sent from:\n" + author.getAsMention() + "\n\n" + joinedUrls).queue();
+            } else {
+                for(Message.Attachment attachment : attachmentsList){
+                    String url = attachment.getUrl();
+                    lairChannel.sendMessage("## Images sent from:\n" + author.getAsMention() + "\n\n" + url).queue();
+                    dungeonChannel.sendMessage("## Images sent from:\n" + author.getAsMention() + "\n\n" + url).queue();
+                }
             }
         }
     }

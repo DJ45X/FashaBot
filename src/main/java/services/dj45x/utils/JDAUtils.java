@@ -9,9 +9,9 @@ import java.util.List;
 
 public class JDAUtils {
     public static TextChannel getTextChannelByName(Guild guild, String channelName){
-        List<TextChannel> channels = guild.getTextChannelsByName(channelName, true);
-        if(!channels.isEmpty()){
-            return channels.get(0);
+        List<TextChannel> channelList = guild.getTextChannelsByName(channelName, true);
+        if(!channelList.isEmpty()){
+            return channelList.get(0);
         }
         return null;
     }
