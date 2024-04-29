@@ -1,15 +1,24 @@
 # Development
+#services:
+#  fashabot:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    environment:
+#      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+#    entrypoint: java
+#    command: "-jar /app/app.jar"
+#    ports:
+#      - "5005:5005"
+#      - "8080:8080"
+#    env_file:
+#      - .env
+
+
+
+# Production
 services:
   fashabot:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-    entrypoint: java
-    command: "-jar /app/app.jar"
-    ports:
-      - "5005:5005"
-      - "8080:8080"
+    image: ghcr.io/dj45x/fashabot:latest
     env_file:
       - .env
