@@ -1,0 +1,17 @@
+name: FashaBot
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and Publish Image to GHCR
+        run: |
+          docker login --username dj45x --password ${{ secrets.GH_PAT }} ghcr.io
+          docker build . -t ghcr.io/dj45x/fashabot:latest
+          docker push ghcr.io/dj45x/fashabot:latest
