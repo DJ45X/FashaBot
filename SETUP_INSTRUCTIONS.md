@@ -14,10 +14,12 @@ Navigate to a directory where you will store project files. For example, `C:\doc
 
 2. Create a `.env` file in the same directory as `docker-compose.yaml` and insert the following:
     ```.env
-    TOKEN=insert_your_bot_token_here
-    GUILD_ID=insert_server_id_here
-    
-    IMAGE_CHANNEL=insert_channel_name_here
+   TOKEN=insert_your_bot_token_here
+   
+   LAIR_ID=lair_discord_id
+   DUNGEON_ID=dungeon_discord_id
+   
+   IMAGE_CHANNEL=insert_channel_name_here
     ```
    **Note:** To get the ``GUILD_ID``, go into discord and right click the server icon, then click "Copy ID". You may need to enable developer settings to perform this. Instructions found [here](https://www.partitionwizard.com/partitionmagic/discord-developer-mode.html)
 

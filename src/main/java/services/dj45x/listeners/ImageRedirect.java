@@ -17,23 +17,31 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class ImageRedirect extends ListenerAdapter {
-    private final String guildId;
+    private final String lairId;
+    private final String dungeonId;
     private final String imageChannelName;
     @Autowired
     public ImageRedirect(
-            @Value("${discord.guildId}") String GUILDID,
+            @Value("${discord.guildId.lair}") String LAIRID,
+            @Value("${discord.guildId.dungeon}") String DUNGEONID,
             @Value("${discord.channels.imageChannel}") String IMAGECHANNEL
     ) {
-        this.guildId = GUILDID;
+        this.lairId = LAIRID;
+        this.dungeonId = DUNGEONID;
         this.imageChannelName = IMAGECHANNEL;
     }
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         super.onMessageReceived(event);
-        Guild guild = event.getJDA().getGuildById(guildId);
-        assert guild != null;
-        TextChannel channel = JDAUtils.getTextChannelByName(guild, imageChannelName);
+        /*Guild guild = event.getJDA().getGuildById(guildId);*/
+        Guild lairGuild = event.getJDA().getGuildById(lairId);
+        Guild dungeonGuild = event.getJDA().getGuildById(dungeonId);
+
+        assert lairGuild != null;
+        TextChannel lairChannel = JDAUtils.getTextChannelByName(lairGuild, imageChannelName);
+        assert dungeonGuild != null;
+        TextChannel dungeonChannel = JDAUtils.getTextChannelByName(dungeonGuild, imageChannelName);
 
         User bot = event.getAuthor();
         if(bot.isBot()) return;
@@ -53,7 +61,7 @@ public class ImageRedirect extends ListenerAdapter {
                 return;
             }
 
-            if(channel == null){
+            if(lairChannel == null || dungeonChannel == null){
                 Logging.warn("Image channel not found!");
                 event.getAuthor().openPrivateChannel()
                         .flatMap(privateChannel -> privateChannel.sendMessage("Image channel not found! Please contact an admin."))
@@ -61,12 +69,19 @@ public class ImageRedirect extends ListenerAdapter {
                 return;
             }
 
-            channel.sendMessage("Images from: " + author.getAsMention()).queue();
+            lairChannel.sendMessage("Images from: " + author.getAsMention()).queue();
+            dungeonChannel.sendMessage("Images from: " + author.getAsMention()).queue();
 
             for(Message.Attachment attachment : attachmentsList){
                 String url = attachment.getUrl();
 
-                channel.sendMessage(url).queue();
+                lairChannel.sendMessage(url).queue();
+            }
+
+            for(Message.Attachment attachment : attachmentsList){
+                String url = attachment.getUrl();
+
+                dungeonChannel.sendMessage(url).queue();
             }
         }
     }
