@@ -12,11 +12,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JDAConfig {
+
     @Bean
     public JDA jda(
             @Value("${discord.token}") String token,
             ObjectProvider<ListenerAdapter> listenerAdapters
-    ) throws InterruptedException {
+    ){
         JDABuilder jdaBuilder = JDABuilder.createDefault(token);
 
         JDA jda = jdaBuilder
@@ -30,7 +31,7 @@ public class JDAConfig {
                         GatewayIntent.GUILD_MESSAGE_REACTIONS
                 ).build();
 
-        jda.awaitReady();
+        /*jda.awaitReady();*/
 
         for(var adapter : listenerAdapters){
             jda.addEventListener(adapter);
