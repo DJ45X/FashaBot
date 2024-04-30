@@ -12,8 +12,6 @@ ___
 <a href="">![License: MIT](https://img.shields.io/badge/license-MIT-green)</a>
 <a href="">![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/dj45x/fashabot/publish-ghcr.yaml)</a>
 
+<p>Please see [Setup.md](https://github.com/DJ45X/FashaBot/blob/b11bb336e23e63d1414973ffcd362651599b869a/SETUP_INSTRUCTIONS.md) for setup instructions!</p>
+
 </div>
-
-This bot has been created for FashaRed's discord. This bot is open source for anyone to use. 
-
-Please see [Setup Instructions.md](https://github.com/DJ45X/FashaBot/blob/b11bb336e23e63d1414973ffcd362651599b869a/SETUP_INSTRUCTIONS.md) for setup instructions!
