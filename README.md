@@ -6,6 +6,7 @@
 ___
 
 <div align="center">
+
 <a href="">![Version](https://img.shields.io/badge/version-1.3.0-blue)</a>
 <a href="">![Maven Central](https://img.shields.io/maven-central/v/net.dv8tion/JDA)</a>
 <a href="">![License: MIT](https://img.shields.io/badge/license-MIT-green)</a>
