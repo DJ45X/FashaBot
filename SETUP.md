@@ -1,4 +1,4 @@
-# Setup Prerequisites
+## Setup Prerequisites
 
 Navigate to a directory where you will store project files. For example, `C:\docker\fashabot`. Follow the steps below to get setup
 
